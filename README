@@ -1,0 +1,54 @@
+An extension to the ruby Date class that calculates all the dates in a recurrence pattern.
+
+Strings of 0s and 1s are used to determine what the recurrence pattern is. Each recurrence type has it's own pattern format. Monthly and Yearly have two pattern formats to handle both "1st and 15th of the month" and "1st and Last Tuesday of the Month".
+
+It should be able to handle any recurrence pattern that iCal can handle, and then some. 
+
+Pattern Formats:
+
+In any of the string cases, you can omit trailing 0s. ie: 1010000 and 101 are equivalent.
+
+Days of the month are represented by a 31 character string. 
+Days of the week are represented by a 7 character string.
+Months of the year are represented by a 12 character string
+
+nth occurrence
+
+The format supports nth occurrence (ie: First Monday, 3rd Wednesday and Last Friday).
+
+Nth occurrence is represented by a 6 digit string. The first five digits represent the first five potential occurrences of a week day and the 6th digit means you want the last occurrence in the year.
+
+Daily
+
+"X" - every x days
+
+example: Date.today.recur(:daily, 2) # every 2 days
+
+Weekly
+
+"X:XXXXXXX" - every x weeks on x days of the week. Each X in the second portion represents a day of the week, Sunday to Saturday.
+
+Example: Date.today.recur(:weekly, "3:0010001") # every three weeks on Tuesday and Saturday
+
+Monthly
+
+"X:XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX" - every x months on x day of the month. Each X in the second portion represents a day of the month. 1 - 31. 0 is off, 1 is on.
+
+Example: Date.today.recur(:monthly,"1:000000000010000000010000000000") # every month on the 10th and 20th
+
+"X:XXXXX:XXXXXXX" - every x months on the nth weekdays
+
+Example: Date.today.recur(:monthly,"2:010001:0010010") # Every 2 months on the 2nd and Last Tuesday and Friday
+
+Yearly
+
+"X:XXXXXXXXXXXX" - every x years on x months
+
+Example: Date.today.recur(:yearly, "2:100001000001") # Every 2 years in January, June and December
+
+"X:XXXXXXXXXXXX:XXXXX:XXXXXXX" - every x years on x months on nth weekdays
+
+Example: Date.today.recur(:yearly, "1:110000000000:001000:1000000") # Every year on the 3rd Sunday of January and February
+
+Written by Jeremy Hubert 
+http://jeremyhubert.com

@@ -1,51 +1,3 @@
-
-def calculate_recurrence(start,type,pattern,ends=start+365)
-date = start.dup
-dates = []
-case type
-when 'daily'
-  date.step(ends,pattern.to_i) { |d| dates << d }
-when 'weekly'
-  pattern = "1" if pattern.nil? || pattern == 0
-  if !pattern.include?(':')
-    date.step(ends,7*pattern.to_i) { |d| dates << d }
-  else
-    pattern = pattern.split(':')
-    pattern[1].to_i.to_s(base=2).reverse.scan(/./).each_with_index do |d,x| 
-      if d == "1"
-        base = date + (x - date.cwday)
-        base = base + 7 if base < date
-        base.step(ends,7*pattern[0].to_i) { |d| dates << d }
-      end
-    end
-    dates.sort!
-  end
-when 'monthly'
-  pattern = "1" if pattern.nil?
-  if !pattern.include?(':')
-    while date < ends
-      dates << (date = date>>pattern.to_i)
-    end
-  else
-    pattern = pattern.split(':')
-    date = Date.civil(date.year,date.month,1)
-    while date < ends
-      pattern[1].to_i.to_s(base=2).reverse.scan(/./).each_with_index do |d,x|
-        if d == "1"
-          next unless Date.valid_civil?(date.year,date.month,x.to_i + 1)
-          dt = Date.civil(date.year,date.month,x.to_i + 1)
-          break if dt > ends
-          dates << dt
-        end
-      end
-      date = date>>pattern[0].to_i
-    end
-  end
-when 'yearly'
-end
-dates
-end
-
 daily:X
 weekly:X:XXXXXXX
 monthly:X:XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
@@ -53,29 +5,13 @@ monthly:X:XXXXX:XXXXXXX
 yearly:X:XXXXXXXXXXXX
 yearly:X:XXXXXXXXXXXX(:XXXXX:XXXXXXX)
 
-Pattern Format:
-daily:[every x days]
-weekly:[every x weeks]:([integer representing 7 digit binary code])
-monthly:[every x months]:([integer representing 31 digit binary code])
-yearly:[every x years]:([integer representing 12 digit binary code])
+dates = calculate_recurrence(Date.today,'weekly','2:91')
 
-date = Date.today
-days.to_s(base=2).scan(/./).each_with_index do |d,x| 
-  if d == "1"
-    
-  end
+def check(dates)
+  dates.each { |date| p "#{date.strftime('%A %B %d, %Y')}" };nil
 end
 
-100001000001000000101001010010
-111111111111111111111111111111
-10010101010
-
-
-
-
-dates = calculate_recurrence(Date.today,'weekly','2:91')
-dates.each { |date| p "#{date.strftime('%A %B %d, %Y')}" };nil
-
+# Binary representation of days of the week
 1 1 Saturday
 2 2 Friday
 4 3 Thursday
@@ -83,17 +19,6 @@ dates.each { |date| p "#{date.strftime('%A %B %d, %Y')}" };nil
 16 5 Tuesday
 32 6 Monday
 64 7 Sunday
-
-require 'date'
-date = Date.civil(2009,1)
-x = date.cwday
-y = 5 # wednesday
-y = 7 if y == 0
-z = 3 # third week
-offset = (7*z - (x - y))
-offset -= 7 if y >= x
-puts (date + offset).strftime('%A %B %d, %Y')
-
 
 require 'date'
 class Date
