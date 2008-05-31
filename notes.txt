@@ -93,3 +93,25 @@ z = 3 # third week
 offset = (7*z - (x - y))
 offset -= 7 if y >= x
 puts (date + offset).strftime('%A %B %d, %Y')
+
+
+require 'date'
+class Date
+  def nth_weekday(nth,day_of_week)
+    nth = nth + 1
+    last = nth == 6
+    nth = 5 if last
+    date = Date.civil(self.year,self.month)
+    current_week_day = date.cwday
+    day_of_week = 7 if day_of_week == 0
+    nth -= 1 if day_of_week >= current_week_day
+    offset = (7*nth - (current_week_day - day_of_week))
+    new_date = date + (7*nth - (current_week_day - day_of_week))
+    return new_date if new_date.month == date.month
+    return last ? new_date - 7 : nil
+  end
+end
+
+puts Date.today.nth_weekday(3,3).to_s
+puts Date.today.nth_weekday(4,3).to_s
+puts Date.today.nth_weekday(6,3).to_s

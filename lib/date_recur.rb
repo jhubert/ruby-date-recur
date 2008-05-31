@@ -97,11 +97,20 @@ class Date #:nodoc:
     Date.civil(self.year,self.month) + (7 - self.cwday)
   end
 
-  def nth_weekday(nth,day_of_week)
+  def nth_weekday(nth,day_of_week=0)
+    Date.nth_weekday(self,nth,day_of_week)
+  end
+
+  def last_sunday
+    m = self.month == 12 ? 1 : self.month + 1
+    Date.civil(self.year,m).first_sunday - 7
+  end
+  
+  def self.nth_weekday(base_date,nth,day_of_week=0)
     nth = nth + 1
     last = nth == 6
     nth = 5 if last
-    date = Date.civil(self.year,self.month)
+    date = Date.civil(base_date.year,base_date.month)
     current_week_day = date.cwday
     day_of_week = 7 if day_of_week == 0
     nth -= 1 if day_of_week >= current_week_day
@@ -109,10 +118,5 @@ class Date #:nodoc:
     new_date = date + (7*nth - (current_week_day - day_of_week))
     return new_date if new_date.month == date.month
     return last ? new_date - 7 : nil
-  end
-
-  def last_sunday
-    m = self.month == 12 ? 1 : self.month + 1
-    Date.civil(self.year,m).first_sunday - 7
   end
 end

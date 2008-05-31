@@ -90,14 +90,3 @@ dates = Date.civil(1955,11,5).recur('yearly','400:111111111111:00101:0000001',Da
 test(dates[0] == Date.civil(1955,11,5))
 test(dates[1] == Date.civil(1955,11,19))
 test(dates[3] == Date.civil(1955,12,31))
-
-p ""
-p ""
-p ""
-
-TESTS = 1000
-Benchmark.bmbm do |results|
-  results.report("name: ") { TESTS.times {  
-    Date.civil(1955,11,5).recur('yearly','400:111111111111:00101:0000001',Date.civil(1965,11,5))    
-  } }
-end
