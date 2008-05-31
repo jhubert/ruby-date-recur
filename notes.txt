@@ -12,13 +12,17 @@ def check(dates)
 end
 
 # Binary representation of days of the week
-1 1 Saturday
-2 2 Friday
-4 3 Thursday
-8 4 Wednesday
-16 5 Tuesday
-32 6 Monday
-64 7 Sunday
+0 1 Saturday
+1 2 Friday
+2 3 Thursday
+4 4 Wednesday
+8 5 Tuesday
+16 6 Monday
+32 7 Sunday
+
+
+
+
 
 require 'date'
 class Date

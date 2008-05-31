@@ -52,3 +52,21 @@ Example: Date.today.recur(:yearly, "1:110000000000:001000:1000000") # Every year
 
 Written by Jeremy Hubert 
 http://jeremyhubert.com
+
+
+**** Other Tips? ****
+
+This method will generate the binary pattern for a set of numbers or a single integer
+
+def pattern_from_numbers(number_array=[], options={})
+  options = { :convert_to_binary => true, :base_zero_numbers => false }.merge(options)
+  number_array = [number_array] if number_array.is_a?(Integer)
+  base_fix = options[:base_zero_numbers] ? 0 : 1
+  number_array = number_array.collect { |x| 2**(x-base_fix) } if options[:convert_to_binary]
+  number_array.inject(0) { |sum,x| sum + x }.to_s(base=2).reverse
+end
+
+puts pattern_from_numbers([3,16,31]) # the third, 16th and 31st day of the month
+puts pattern_from_numbers(3) # third
+puts pattern_from_numbers([1,8,64], :convert_to_binary => false) # numbers passed in binary format already
+puts pattern_from_numbers(Date.today.cwday, :base_zero_numbers => true) # don't subtract 1 from all numbers because they already start at 0 instead of 1
